@@ -1,15 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import { SupabaseService } from 'src/supabase/supabase.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(
+    private supabase: SupabaseService,
+    private prisma: PrismaService
+  ) { }
+
+  create(createAuthDto: any) {
+
+    this.prisma.user.create({
+
+    })
+
+    return this.supabase.client.auth.signUp({
+      email: createAuthDto.email,
+      password: createAuthDto.password,
+    })
+
   }
 
   findAll() {
-    return `This action returns all auth`;
+    return this.prisma.user.findMany();
+
   }
 
   findOne(id: number) {

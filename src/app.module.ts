@@ -8,11 +8,11 @@ import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    PrismaModule,
-    SupabaseModule,
     ConfigModule.forRoot({
       isGlobal: true, // so you can inject process.env anywhere
     }),
+    PrismaModule,
+    SupabaseModule,
     AuthModule,
   ],
   controllers: [],
