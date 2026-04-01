@@ -3,15 +3,16 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 @Injectable()
 export class SupabaseService {
-    private client: SupabaseClient
-    constructor() {
-        this.client = createClient(
-            process.env.SUPABASE_URL!,
-            process.env.SUPABASE_KEY!
-        )
-    }
+    public client: SupabaseClient;
 
-    getClient(): SupabaseClient {
-        return this.client
+    constructor() {
+        const supabaseUrl = process.env.SUPABASE_URL;
+        const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+        if (!supabaseUrl || !supabaseKey) {
+            throw new Error('SUPABASE_URL and SUPABASE_ANON_KEY must be set');
+        }
+
+        this.client = createClient(supabaseUrl, supabaseKey);
     }
 }
