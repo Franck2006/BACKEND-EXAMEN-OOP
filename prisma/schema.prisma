@@ -563,20 +563,35 @@ enum one_time_token_type {
 }
 
 model Profile {
-  id             String           @id @default(uuid()) @db.Uuid
-  user_id        String           @unique @db.Uuid
-  role           Role             @default(USER)
-  name           String?
-  last_name      String?
-  avatar         String?
-  coach          Coach?
-  flashcard_sets Flashcard_sets[]
-  comments       Comment[]
-  createdAt      DateTime         @default(now()) @db.Timestamptz(6)
-  updatedAt      DateTime         @default(now()) @db.Timestamptz(6)
-  users          User             @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id                   String                @id @default(uuid()) @db.Uuid
+  user_id              String                @unique @db.Uuid
+  role                 Role                  @default(USER)
+  name                 String?
+  last_name            String?
+  avatar_url           String?
+  avatar_url_path      String?
+  coach                Coach?
+  subscription         Subscription?
+  flashcard_sets       Flashcard_sets[]
+  comments             Comment[]
+  achievements         Achiement[]
+  messages             Message[]
+  notifications        Notification[]
+  conversationProfiles ConversationProfile[]
+  createdAt            DateTime              @default(now()) @db.Timestamptz(6)
+  updatedAt            DateTime              @updatedAt @db.Timestamptz(6)
+  users                User                  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([user_id])
+  @@schema("public")
+}
+
+enum Role {
+  USER
+  STUDENT
+  COACH
+  SUPER_ADMIN
+
   @@schema("public")
 }
 
@@ -586,7 +601,7 @@ model Coach {
   expertise  String?
   rating     Float?
   createdAt  DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt  DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime @updatedAt @db.Timestamptz(6)
   profile    Profile  @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@schema("public")
@@ -597,7 +612,7 @@ model Flashcard_sets {
   title       String
   description String
   createdAt   DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime @updatedAt @db.Timestamptz(6)
   profile     Profile  @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   profile_id  String   @db.Uuid
 
@@ -608,16 +623,109 @@ model Comment {
   id         String   @id @default(uuid()) @db.Uuid
   content    String
   createdAt  DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt  DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime @updatedAt @db.Timestamptz(6)
   profile    Profile  @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   profile_id String   @db.Uuid
 
   @@schema("public")
 }
 
-enum Role {
-  USER
-  ADMIN
+model Message {
+  id              String       @id @default(uuid()) @db.Uuid
+  content         String
+  conversation_id String       @db.Uuid
+  conversation    Conversation @relation(fields: [conversation_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  sender          Profile      @relation(fields: [sender_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  sender_id       String       @db.Uuid
+  createdAt       DateTime     @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime     @updatedAt @db.Timestamptz(6)
+
+  @@schema("public")
+}
+
+model ConversationProfile {
+  conversation_id String       @db.Uuid
+  profile_id      String       @db.Uuid
+  conversation    Conversation @relation(fields: [conversation_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  profile         Profile      @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  createdAt       DateTime     @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime     @updatedAt @db.Timestamptz(6)
+
+  @@id([conversation_id, profile_id])
+  @@schema("public")
+}
+
+model Conversation {
+  id                   String                @id @default(uuid()) @db.Uuid
+  messages             Message[]
+  conversationProfiles ConversationProfile[]
+  createdAt            DateTime              @default(now()) @db.Timestamptz(6)
+  updatedAt            DateTime              @updatedAt @db.Timestamptz(6)
+
+  @@schema("public")
+}
+
+model Achiement {
+  id          String   @id @default(uuid()) @db.Uuid
+  title       String
+  description String
+  profile     Profile  @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  profile_id  String   @db.Uuid
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime @updatedAt @db.Timestamptz(6)
+
+  @@schema("public")
+}
+
+model Subscription_plan {
+  id                String         @id @default(uuid()) @db.Uuid
+  name              String
+  description       String
+  price             Int
+  trial_period_days Int
+  subscription      Subscription[]
+  createdAt         DateTime       @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime       @updatedAt @db.Timestamptz(6)
+
+  @@schema("public")
+}
+
+model Subscription {
+  id                     String            @id @default(uuid()) @db.Uuid
+  profile_id             String            @unique @db.Uuid
+  type                   String
+  status                 String
+  stripe_subscription_id String
+  invoice                Invoice[]
+  profile                Profile           @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  plan                   Subscription_plan @relation(fields: [plan_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  plan_id                String            @db.Uuid
+  createdAt              DateTime          @default(now()) @db.Timestamptz(6)
+  updatedAt              DateTime          @updatedAt @db.Timestamptz(6)
+
+  @@schema("public")
+}
+
+model Invoice {
+  id              String       @id @default(uuid()) @db.Uuid
+  subscription_id String       @db.Uuid
+  amount          Int
+  status          String
+  createdAt       DateTime     @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime     @updatedAt @db.Timestamptz(6)
+  subscription    Subscription @relation(fields: [subscription_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@schema("public")
+}
+
+model Notification {
+  id         String   @id @default(uuid()) @db.Uuid
+  title      String
+  body       String
+  isRead     Boolean
+  profile_id String   @db.Uuid
+  profile    Profile  @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  createdAt  DateTime @default(now())
 
   @@schema("public")
 }
