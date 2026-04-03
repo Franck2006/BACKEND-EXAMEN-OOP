@@ -9,7 +9,7 @@ export class AuthService {
     private prisma: PrismaService
   ) { }
 
-  async sign_up(signUpCreadentials: any) {
+  async sign_up(signUpCreadentials: { email: string, password: string, phone?: string }) {
     const { data, error } = await this.supabase.client.auth.signUp({
       email: signUpCreadentials.email,
       password: signUpCreadentials.password,
@@ -23,7 +23,7 @@ export class AuthService {
     return data;
   }
 
-  async sign_in(signInCreadentials: any) {
+  async sign_in(signInCreadentials: { email: string, password: string }) {
     const { data, error } = await this.supabase.client.auth.signInWithPassword({
       email: signInCreadentials.email,
       password: signInCreadentials.password,
@@ -36,7 +36,7 @@ export class AuthService {
     return data;
   }
 
-  async sign_out() {
+  async sign_out(token: string) {
     const { error } = await this.supabase.client.auth.signOut();
 
     if (error) {
