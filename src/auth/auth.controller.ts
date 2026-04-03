@@ -1,34 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
-  @Post()
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
+  @Post("sign-up")
+  sign_up(@Body() signUpCreadentials: CreateAuthDto) {
+    return this.authService.sign_up(signUpCreadentials);
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
+  @Post("sign-in")
+  sign_in(@Body() signInCreadentials: CreateAuthDto) {
+    return this.authService.sign_in(signInCreadentials);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+  @Post("sign-out")
+  sign_out() {
+    return this.authService.sign_out();
   }
 }

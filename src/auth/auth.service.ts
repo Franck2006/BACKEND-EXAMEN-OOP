@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { SupabaseService } from 'src/supabase/supabase.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -10,33 +9,40 @@ export class AuthService {
     private prisma: PrismaService
   ) { }
 
-  create(createAuthDto: any) {
+  async sign_up(signUpCreadentials: any) {
+    const { data, error } = await this.supabase.client.auth.signUp({
+      email: signUpCreadentials.email,
+      password: signUpCreadentials.password,
+      phone: signUpCreadentials.phone,
+    });
 
-    this.prisma.user.create({
+    if (error) {
+      throw new Error(error.message);
+    }
 
-    })
-
-    return this.supabase.client.auth.signUp({
-      email: createAuthDto.email,
-      password: createAuthDto.password,
-    })
-
+    return data;
   }
 
-  findAll() {
-    return this.prisma.user.findMany();
+  async sign_in(signInCreadentials: any) {
+    const { data, error } = await this.supabase.client.auth.signInWithPassword({
+      email: signInCreadentials.email,
+      password: signInCreadentials.password,
+    });
 
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return data;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+  async sign_out() {
+    const { error } = await this.supabase.client.auth.signOut();
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
+    if (error) {
+      throw new Error(error.message);
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+    return { message: "Signed out successfully" };
   }
 }
