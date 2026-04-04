@@ -37,6 +37,8 @@ export class AuthService {
     });
 
     if (error) throw new Error(error.message)
+
+    return data;
   }
 
   async sign_out(token: string) {
