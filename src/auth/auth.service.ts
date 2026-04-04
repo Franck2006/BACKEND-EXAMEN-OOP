@@ -11,7 +11,7 @@ export class AuthService {
 
   async sign_up(signUpCreadentials: { email: string, password: string, phone?: string }) {
     try {
-      const { data, error } = await this.supabase.client.auth.signInWithPassword({
+      const { data, error } = await this.supabase.client.auth.signUp({
         email: signUpCreadentials.email,
         password: signUpCreadentials.password,
         phone: signUpCreadentials.phone,
