@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Headers } from '@nestjs/common';
+import { Controller, Post, Body, Headers, Get } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -19,5 +19,16 @@ export class AuthController {
   sign_out(@Headers('authorization') auth: string) {
     const token = auth?.split(' ')[1];
     return this.authService.sign_out(token);
+  }
+
+  @Get("user")
+  findUserByEmail(@Headers('authorization') auth: string) {
+    const token = auth?.split(' ')[1];
+    return this.authService.findUserByEmail(token);
+  }
+
+  @Get("protected")
+  getAllUsers() {
+    return this.authService.getAllUsers();
   }
 }

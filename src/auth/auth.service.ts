@@ -48,4 +48,15 @@ export class AuthService {
 
     return { message: "Signed out successfully" };
   }
+
+  findUserByEmail(email: string) {
+    return this.prisma.user.findUnique({
+      where: { email }
+    });
+  }
+
+  getAllUsers() {
+    return this.prisma.user.findMany();
+  }
+
 }
