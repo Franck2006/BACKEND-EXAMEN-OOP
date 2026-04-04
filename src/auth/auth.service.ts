@@ -31,14 +31,21 @@ export class AuthService {
   }
 
   async sign_in(signInCreadentials: { email: string, password: string }) {
-    const { data, error } = await this.supabase.client.auth.signInWithPassword({
-      email: signInCreadentials.email,
-      password: signInCreadentials.password,
-    });
+    try {
+      const { data, error } = await this.supabase.client.auth.signInWithPassword({
+        email: signInCreadentials.email,
+        password: signInCreadentials.password,
+      });
 
-    if (error) throw new Error(error.message)
+      if (error) throw new Error(error.message)
 
-    return data;
+      return data;
+    } catch (error) {
+      if (error.message.includes(' Email not confirmed')) {
+        throw new Error('Email not confirmed. Please check your email for a confirmation link.');
+      }
+      throw new Error(error.message);
+    }
   }
 
   async sign_out(token: string) {
