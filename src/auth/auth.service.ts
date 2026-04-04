@@ -10,17 +10,24 @@ export class AuthService {
   ) { }
 
   async sign_up(signUpCreadentials: { email: string, password: string, phone?: string }) {
-    const { data, error } = await this.supabase.client.auth.signUp({
-      email: signUpCreadentials.email,
-      password: signUpCreadentials.password,
-      phone: signUpCreadentials.phone,
-    });
+    try {
+      const { data, error } = await this.supabase.client.auth.signInWithPassword({
+        email: signUpCreadentials.email,
+        password: signUpCreadentials.password,
+        phone: signUpCreadentials.phone,
+      });
 
-    if (error) {
-      throw new Error(error.message);
+      if (error) throw new Error(error.message)
+
+      return data
+    } catch (error) {
+      if (error) {
+        if (error.message.includes('rate limit')) {
+          throw new Error('Too many signup attempts. Please wait a moment.');
+        }
+        throw new Error(error.message);
+      }
     }
-
-    return data;
   }
 
   async sign_in(signInCreadentials: { email: string, password: string }) {
@@ -29,11 +36,7 @@ export class AuthService {
       password: signInCreadentials.password,
     });
 
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    return data;
+    if (error) throw new Error(error.message)
   }
 
   async sign_out(token: string) {
