@@ -19,6 +19,16 @@ export class AuthService {
 
       if (error) throw new Error(error.message)
 
+      const user = data.user;
+
+      await this.prisma.profile.create({
+        data: {
+          email: user?.email || '',
+          supabase_id: user?.id || '',
+          phone: user?.phone || null
+        }
+      })
+
       return data
     } catch (error) {
       if (error) {
@@ -38,6 +48,14 @@ export class AuthService {
       });
 
       if (error) throw new Error(error.message)
+
+      this.prisma.profile.upsert({
+        where: {
+          email: data?.user?.email
+        },
+        update: {},
+        create: { email: data?.user?.email || '', supabase_id: data?.user?.id || '' }
+      })
 
       return data;
     } catch (error) {

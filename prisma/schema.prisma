@@ -560,3 +560,12 @@ enum one_time_token_type {
 
   @@schema("auth")
 }
+
+model Profile {
+  id          String  @id @default(uuid()) @db.Uuid
+  supabase_id String  @unique @db.Uuid
+  phone       String? @unique
+  email       String  @unique
+
+  @@schema("public")
+}
