@@ -34,7 +34,7 @@ export class AuthGuard implements CanActivate {
 
     console.log(profile)
 
-    request.user = data?.user;
+    request.user = profile
 
     return true;
   }

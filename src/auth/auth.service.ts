@@ -54,7 +54,10 @@ export class AuthService {
           email: data?.user?.email
         },
         update: {},
-        create: { email: data?.user?.email || '', supabase_id: data?.user?.id || '' }
+        create: {
+          email: data?.user?.email || '',
+          supabase_id: data?.user?.id
+        }
       })
 
       return data;
