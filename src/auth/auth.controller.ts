@@ -42,4 +42,11 @@ export class AuthController {
   admin() {
     return "this is the admin protected route "
   }
+
+  @Roles('USER')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Get("me")
+  user() {
+    return "this is the user protected route "
+  }
 }
