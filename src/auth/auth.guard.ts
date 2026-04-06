@@ -28,14 +28,20 @@ export class AuthGuard implements CanActivate {
 
     const profile = await this.prisma.profile.findUnique({
       where: {
-        email: data?.user?.id || ''
+        email: data?.user?.email
       }
     })
 
-    console.log(profile)
+    if (!profile) {
+      throw new UnauthorizedException('Profile not found');
+    }
+
 
     request.user = profile
 
     return true;
   }
 }
+
+
+

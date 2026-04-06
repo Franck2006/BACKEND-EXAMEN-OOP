@@ -36,15 +36,17 @@ export class AuthController {
   }
 
   // these are the routes that i am trying on
-  @Roles('ADMIN')
+
   @UseGuards(AuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Get("admin-protected-route")
   admin() {
     return "this is the admin protected route "
   }
 
-  @Roles('USER')
+
   @UseGuards(AuthGuard, RolesGuard)
+  @Roles('USER')
   @Get("me")
   user() {
     return "this is the user protected route "
