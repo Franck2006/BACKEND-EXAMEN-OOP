@@ -566,6 +566,14 @@ model Profile {
   supabase_id String  @unique @db.Uuid
   phone       String? @unique
   email       String  @unique
+  role Role @default(USER)
+
+  @@schema("public")
+}
+
+enum Role {
+  USER
+  ADMIN
 
   @@schema("public")
 }

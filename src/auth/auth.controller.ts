@@ -1,5 +1,8 @@
-import { Controller, Post, Body, Headers, Get } from '@nestjs/common';
+import { Controller, Post, Body, Headers, Get, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { Roles } from './roles.decorator';
+import { AuthGuard } from './auth.guard';
+import { RolesGuard } from './roles.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -30,5 +33,13 @@ export class AuthController {
   @Get("protected")
   getAllUsers() {
     return this.authService.getAllUsers();
+  }
+
+  // these are the routes that i am trying on
+  @Roles('ADMIN')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Get("admin-protected-route")
+  admin() {
+    return "this is the admin protected route "
   }
 }
