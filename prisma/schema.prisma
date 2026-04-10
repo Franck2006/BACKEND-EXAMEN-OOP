@@ -57,6 +57,9 @@ model User {
 
   @@index([instance_id])
   @@index([is_anonymous])
+  @@index([created_at(sort: Desc)], map: "idx_users_created_at_desc")
+  @@index([email], map: "idx_users_email")
+  @@index([last_sign_in_at(sort: Desc)], map: "idx_users_last_sign_in_at_desc")
   @@map("users")
   @@schema("auth")
 }
@@ -559,21 +562,4 @@ enum one_time_token_type {
   phone_change_token
 
   @@schema("auth")
-}
-
-model Profile {
-  id          String  @id @default(uuid()) @db.Uuid
-  supabase_id String  @unique @db.Uuid
-  phone       String? @unique
-  email       String  @unique
-  role Role @default(USER)
-
-  @@schema("public")
-}
-
-enum Role {
-  USER
-  ADMIN
-
-  @@schema("public")
 }

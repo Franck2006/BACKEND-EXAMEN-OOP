@@ -4,7 +4,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { SupabaseModule } from './supabase/supabase.module';
 import { SupabaseService } from './supabase/supabase.service';
 import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
+// import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -13,7 +13,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     PrismaModule,
     SupabaseModule,
-    AuthModule,
+
   ],
   controllers: [],
   providers: [
