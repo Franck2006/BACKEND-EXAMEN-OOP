@@ -5,6 +5,7 @@ import { SupabaseModule } from './supabase/supabase.module';
 import { SupabaseService } from './supabase/supabase.service';
 import { ConfigModule } from '@nestjs/config';
 // import { AuthModule } from './auth/auth.module';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ConfigModule } from '@nestjs/config';
     }),
     PrismaModule,
     SupabaseModule,
+    ProfileModule,
 
   ],
   controllers: [],

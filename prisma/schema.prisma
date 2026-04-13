@@ -567,7 +567,8 @@ enum one_time_token_type {
 
 model Profile {
   id                   String                 @id @default(uuid()) @db.Uuid
-  nom                  String
+  nom                  String 
+  email String
   post_nom             String
   role                 Role
   adresse              Adresse?
@@ -581,6 +582,7 @@ model Profile {
 }
 
 enum Role {
+  USER
   SUPER_ADMIN
   KIT_PROVIDER
   MANAGER
