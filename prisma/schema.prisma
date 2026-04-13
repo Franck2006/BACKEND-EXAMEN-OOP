@@ -54,6 +54,7 @@ model User {
   sessions                    sessions[]
   webauthn_challenges         webauthn_challenges[]
   webauthn_credentials        webauthn_credentials[]
+  profile                     Profile?
 
   @@index([instance_id])
   @@index([is_anonymous])
@@ -562,4 +563,108 @@ enum one_time_token_type {
   phone_change_token
 
   @@schema("auth")
+}
+
+model Profile {
+  id                   String                 @id @default(uuid()) @db.Uuid
+  nom                  String
+  post_nom             String
+  role                 Role
+  adresse              Adresse?
+  paiement             Paiement[]
+  machandise_stockee   Machandise_stockee[]
+  machandises_achetees Machandises_achetees[]
+  users_id             String                 @unique @db.Uuid
+  user                 User                   @relation(fields: [users_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@schema("public")
+}
+
+enum Role {
+  SUPER_ADMIN
+  KIT_PROVIDER
+  MANAGER
+
+  @@schema("public")
+}
+
+model Paiement {
+  id                 String              @id @default(uuid()) @db.Uuid
+  quantite_acchetee  Int
+  date_paiement      DateTime
+  Machandise_stockee Machandise_stockee?
+  profile_id         String              @unique @db.Uuid
+  profile            Profile             @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  client_id          String              @unique @db.Uuid
+  client             Client              @relation(fields: [client_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@schema("public")
+}
+
+model Machandise_stockee {
+  id                String   @id @default(uuid()) @db.Uuid
+  prix_vente        Int
+  quantinte_stockee Int
+  profile_id        String   @unique @db.Uuid
+  profile           Profile  @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  Paiement_id       String   @unique @db.Uuid
+  paiement          Paiement @relation(fields: [Paiement_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@schema("public")
+}
+
+model Client {
+  id       String     @id @default(uuid()) @db.Uuid
+  nom      String
+  post_nom String
+  email    String
+  adresse  Adresse?
+  Paiement Paiement[]
+
+  @@schema("public")
+}
+
+model Machandises_achetees {
+  id                   String      @id @default(uuid()) @db.Uuid
+  numero_serie         String
+  designation          String
+  prix_dachat          String
+  quantite_fournisseur Int
+  profile_id           String      @unique @db.Uuid
+  profile              Profile     @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  fournisseur_id       String      @unique @db.Uuid
+  fournisseur          Fournisseur @relation(fields: [fournisseur_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  couleur    String
+  date_achat DateTime
+
+  @@schema("public")
+}
+
+model Fournisseur {
+  id                   String                 @id @default(uuid()) @db.Uuid
+  nom                  String
+  post_nom             String
+  email                String
+  adresse              Adresse?
+  machandises_achetees Machandises_achetees[]
+
+  @@schema("public")
+}
+
+model Adresse {
+  id             String      @id @default(uuid()) @db.Uuid
+  pay            String
+  commune        String
+  quartier       String
+  avenue         String
+  numero_port    String
+  fournisseur_id String      @unique @db.Uuid
+  Fournisseur    Fournisseur @relation(fields: [fournisseur_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  client_id      String      @unique @db.Uuid
+  client         Client      @relation(fields: [client_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  profile_id     String      @unique @db.Uuid
+  profile        Profile     @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@schema("public")
 }
