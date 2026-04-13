@@ -18,7 +18,7 @@ export class ProfileService {
         phone: createProfileDto.phone
       })
 
-      if (error) throw new Error("something went wrong")
+      if (error) throw new Error(error.message)
 
       if (data) {
         await this.prisma.profile.create({
@@ -34,44 +34,69 @@ export class ProfileService {
             }
           }
         })
+
+        return data.session
       }
 
     } catch (error) {
-      console.log(error)
+      if (error) {
+        if (error.message.includes('rate limit')) {
+          throw new Error('Too many signup attempts. Please wait a moment.');
+        }
+        throw new Error(error.message);
+      }
+      throw new Error(error.message)
 
     }
     return
   }
 
   async signIn(updateProfileDto: UpdateProfileDto) {
-    const { data, error } = await this.supabase.client.auth.signInWithPassword({
-      email: updateProfileDto.email,
-      password: updateProfileDto.password
-    })
 
-    if (error) throw new Error("something went wrong !!!!")
+    try {
 
-    this.prisma.profile.upsert({
-      where: {
-        id: data.user?.id
-      },
-      update: {},
-      create: {
-        nom: updateProfileDto.nom,
-        post_nom: updateProfileDto.post_nom,
-        email: data.user?.email || '',
-        role: 'USER',
-        user: {
-          connect: {
-            id: data.user?.id
+      const { data, error } = await this.supabase.client.auth.signInWithPassword({
+        email: updateProfileDto.email,
+        password: updateProfileDto.password
+      })
+
+      if (error) throw new Error("something went wrong !!!!")
+
+      await this.prisma.profile.upsert({
+        where: {
+          id: data.user?.id
+        },
+        update: {},
+        create: {
+          nom: updateProfileDto.nom,
+          post_nom: updateProfileDto.post_nom,
+          email: data.user?.email || '',
+          role: 'USER',
+          user: {
+            connect: {
+              id: data.user?.id
+            }
           }
         }
+      })
+
+      return data.session
+
+    } catch (error) {
+      if (error.message.includes('Email not confirmed')) {
+        throw new Error('Email not confirmed. Please check your email for a confirmation link.');
       }
-    })
+      throw new Error(error.message);
+    }
+
   }
 
-  signOut(id: number) {
-    return `This action returns a #${id} profile`;
+  async signOut(id: number) {
+    const { error } = await this.supabase.client.auth.signOut()
+
+    if (error) throw new Error(error.message)
+
+    return { measage: "Signed out successfully" }
   }
 
 }
