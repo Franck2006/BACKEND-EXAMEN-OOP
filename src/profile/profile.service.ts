@@ -12,10 +12,12 @@ export class ProfileService {
   async create(createProfileDto: CreateProfileDto) {
 
     try {
-      const { data, error } = await this.supabase.client.auth.signUp({
+      const { data, error } = await this.supabase.client.auth.admin.createUser({
         email: createProfileDto.email,
         password: createProfileDto.password,
-        phone: createProfileDto.phone
+        phone: createProfileDto.phone,
+        email_confirm: true,
+
       })
 
       if (error) throw new Error(error.message)
@@ -23,8 +25,9 @@ export class ProfileService {
       if (data) {
         await this.prisma.profile.create({
           data: {
-            nom: createProfileDto.nom,
-            post_nom: createProfileDto.post_nom,
+            name: createProfileDto.name,
+            lastname: createProfileDto.lastname,
+            phone: data.user.phone || "",
             email: data.user?.email || '',
             role: 'USER',
             user: {
@@ -35,7 +38,7 @@ export class ProfileService {
           }
         })
 
-        return data.session
+        return data.user
       }
 
     } catch (error) {
@@ -46,7 +49,6 @@ export class ProfileService {
         throw new Error(error.message);
       }
       throw new Error(error.message)
-
     }
     return
   }
@@ -68,9 +70,10 @@ export class ProfileService {
         },
         update: {},
         create: {
-          nom: updateProfileDto.nom,
-          post_nom: updateProfileDto.post_nom,
-          email: data.user?.email || '',
+          name: updateProfileDto.name,
+          lastname: updateProfileDto.lastname,
+          email: data.user.email || '',
+          phone: data.user?.phone || '',
           role: 'USER',
           user: {
             connect: {
