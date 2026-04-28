@@ -7,28 +7,23 @@ import { UpdateProfileDto } from './dto/update-profile.dto';
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
-  @Post()
-  create(@Body() createProfileDto: CreateProfileDto) {
-    return this.profileService.create(createProfileDto);
-  }
-
-  @Get()
+  @Get("get-all-profiles")
   findAll() {
     return this.profileService.findAll();
   }
 
-  @Get(':id')
+  @Get('get-profile/:id')
   findOne(@Param('id') id: string) {
-    return this.profileService.findOne(+id);
+    return this.profileService.findOne(id);
   }
 
-  @Patch(':id')
+  @Patch('update-profile/:id')
   update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
-    return this.profileService.update(+id, updateProfileDto);
+    return this.profileService.update(id, updateProfileDto);
   }
 
-  @Delete(':id')
+  @Delete('delete-profile/:id')
   remove(@Param('id') id: string) {
-    return this.profileService.remove(+id);
+    return this.profileService.remove(id);
   }
 }

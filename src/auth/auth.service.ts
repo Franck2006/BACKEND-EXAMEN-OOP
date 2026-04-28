@@ -36,7 +36,7 @@ export class AuthService {
       }
     })
 
-    return data.user
+    return this.signIn(createProfileDto)
   }
 
   async signIn(signInDto: UpdateProfileDto) {
