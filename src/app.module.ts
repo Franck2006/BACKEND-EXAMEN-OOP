@@ -4,8 +4,6 @@ import { PrismaModule } from './prisma/prisma.module';
 import { SupabaseModule } from './supabase/supabase.module';
 import { SupabaseService } from './supabase/supabase.service';
 import { ConfigModule } from '@nestjs/config';
-// import { AuthModule } from './auth/auth.module';
-import { ProfileModule } from './profile/profile.module';
 import { AppointementModule } from './appointement/appointement.module';
 import { PatientModule } from './patient/patient.module';
 import { DoctorModule } from './doctor/doctor.module';
@@ -13,6 +11,7 @@ import { MessageModule } from './message/message.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { AuthModule } from './auth/auth.module';
 import { AiAgentModule } from './ai-agent/ai-agent.module';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [

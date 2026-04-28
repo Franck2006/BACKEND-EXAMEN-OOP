@@ -6,7 +6,7 @@ export class SupabaseService {
     public client: SupabaseClient;
 
     constructor() {
-        const supabaseUrl = process.env.SUPABASE_URL!;
+        const supabaseUrl = process.env.SUPABASE_URL as string;
         const supabaseKey = process.env.SUPABASE_ANON_KEY as string;
 
         if (!supabaseUrl || !supabaseKey) {

@@ -495,18 +495,6 @@ model webauthn_credentials {
   @@schema("auth")
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-// model public_User {
-//   id                 String  @id
-//   name               String
-//   email              String  @unique
-//   stripe_customer_id String?
-
-//   @@map("User")
-//   @@schema("public")
-// }
-
-
 enum aal_level {
   aal1
   aal2
