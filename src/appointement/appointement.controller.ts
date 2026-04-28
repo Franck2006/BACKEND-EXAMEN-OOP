@@ -7,28 +7,28 @@ import { UpdateAppointementDto } from './dto/update-appointement.dto';
 export class AppointementController {
   constructor(private readonly appointementService: AppointementService) {}
 
-  @Post()
+  @Post("create-appointement")
   create(@Body() createAppointementDto: CreateAppointementDto) {
     return this.appointementService.create(createAppointementDto);
   }
 
-  @Get()
+  @Get("find-all-appointements")
   findAll() {
     return this.appointementService.findAll();
   }
 
-  @Get(':id')
+  @Get("find-appointement/:id")
   findOne(@Param('id') id: string) {
-    return this.appointementService.findOne(+id);
+    return this.appointementService.findOne(id);
   }
 
-  @Patch(':id')
+  @Patch("update-appointement/:id")
   update(@Param('id') id: string, @Body() updateAppointementDto: UpdateAppointementDto) {
-    return this.appointementService.update(+id, updateAppointementDto);
+    return this.appointementService.update(id, updateAppointementDto);
   }
 
-  @Delete(':id')
+  @Delete("delete-appointement/:id")
   remove(@Param('id') id: string) {
-    return this.appointementService.remove(+id);
+    return this.appointementService.remove(id);
   }
 }

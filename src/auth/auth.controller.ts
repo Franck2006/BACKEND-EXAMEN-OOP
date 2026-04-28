@@ -6,12 +6,12 @@ import {  CreateProfileDto, UpdateProfileDto } from './dto/creadetial.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
+  @Post("sign-up")
   signUp(@Body() creadentials: CreateProfileDto){
     return this.authService.signUp(creadentials)
   }
 
-  @Post()
+  @Post("sign-in")
   signIn(@Body() signInDto: UpdateProfileDto){
     return this.authService.signIn(signInDto)
   }
