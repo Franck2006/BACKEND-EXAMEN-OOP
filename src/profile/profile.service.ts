@@ -17,8 +17,9 @@ export class ProfileService {
   }
 
   async findOne(id: string) {
+    console.log("id: ", id);
     return await this.prisma.profile.findUnique({
-      where: { id },
+      where: { user_id: id },
       include: {
         user: true,
         doctor: true,
@@ -29,7 +30,7 @@ export class ProfileService {
 
   async update(id: string, updateProfileDto: UpdateProfileDto) {
     return await this.prisma.profile.update({
-      where: { id },
+      where: {  id },
       data: updateProfileDto
     })
   }
