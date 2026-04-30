@@ -5,7 +5,7 @@ import { AiAgentService } from './ai-agent.service';
 export class AiAgentController {
   constructor(private readonly aiAgentService: AiAgentService) {}
 
-  @Post()
+  @Post("submit-prompt")
   getAppoinments(@Query() ai_prompt: string){
     return this.aiAgentService.getAppoinments(ai_prompt)
   }

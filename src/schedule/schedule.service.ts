@@ -34,15 +34,28 @@ export class ScheduleService {
     })
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} schedule`;
+  async findOne(id: string) {
+    return await this.prisma.schedule.findUnique({
+      where:{
+        id
+      }
+    })
   }
 
-  update(id: number, updateScheduleDto: UpdateScheduleDto) {
-    return `This action updates a #${id} schedule`;
+  async update(id: string, updateScheduleDto: UpdateScheduleDto) {
+    return await this.prisma.schedule.update({
+      where:{
+        id
+      },
+      data: updateScheduleDto,
+    })
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} schedule`;
+  async remove(id: string) {
+    return await this.prisma.schedule.delete({
+      where:{
+        id
+      }
+    })
   }
 }

@@ -7,7 +7,7 @@ import { UpdateDoctorDto } from './dto/update-doctor.dto';
 export class DoctorController {
   constructor(private readonly doctorService: DoctorService) {}
 
-  @Post()
+  @Post("create-doctor")
   create(@Body() createDoctorDto: CreateDoctorDto) {
     return this.doctorService.create(createDoctorDto);
   }
@@ -17,17 +17,17 @@ export class DoctorController {
     return this.doctorService.findAll(specialty);
   }
 
-  @Get(':id')
+  @Get('get-doctor/:id')
   findOne(@Param('id') id: string) {
     return this.doctorService.findOne(id);
   }
 
-  @Patch(':id')
+  @Patch('update-doctor/:id')
   update(@Param('id') id: string, @Body() updateDoctorDto: UpdateDoctorDto) {
     return this.doctorService.update(id, updateDoctorDto);
   }
 
-  @Delete(':id')
+  @Delete('delete-doctor/:id')
   remove(@Param('id') id: string) {
     return this.doctorService.remove(id);
   }

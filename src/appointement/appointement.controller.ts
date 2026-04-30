@@ -12,12 +12,12 @@ export class AppointementController {
     return this.appointementService.create(createAppointementDto);
   }
 
-  @Get("find-all-appointements")
+  @Get("get-all-appointements")
   findAll() {
     return this.appointementService.findAll();
   }
 
-  @Get("find-appointement/:id")
+  @Get("get-appointement/:id")
   findOne(@Param('id') id: string) {
     return this.appointementService.findOne(id);
   }
