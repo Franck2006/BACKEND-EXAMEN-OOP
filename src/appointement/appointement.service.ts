@@ -46,8 +46,13 @@ export class AppointementService {
     })
   }
 
-  update(id: string, updateAppointementDto: UpdateAppointementDto) {
-    return `This action updates a #${id} appointement`;
+  async update(id: string, updateAppointementDto: UpdateAppointementDto) {
+    return await this.prisma.appointment.update({
+      where:{
+        id
+      },
+      data: {}
+    })
   }
 
   async remove(id: string) {
