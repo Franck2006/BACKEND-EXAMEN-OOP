@@ -19,13 +19,9 @@ export class AuthGuard implements CanActivate {
 
     const token = authHeader.split(' ')[1];
 
-    console.log("token: ", token);
-
     const { data, error } = await this.supabase.client.auth.getUser(token);
 
-    console.log("error: ", error);
-
-    if(error) throw new UnauthorizedException('Invalid token');
+    if(error) throw new UnauthorizedException(error.message);
 
     const profile = await this.prisma.profile.findUnique({
       where:{
@@ -35,7 +31,7 @@ export class AuthGuard implements CanActivate {
 
     request.user = profile;
 
-    console.log(request.user);
+    console.log("profile: ", request.user);
     
     return true;
   }

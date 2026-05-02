@@ -6,8 +6,7 @@ import { Roles } from 'src/auth/roles.decorator';
 import { Role } from 'generated/prisma/enums';
 import { RolesGuard } from 'src/auth/roles.guard';
 
-
-
+@UseGuards(AuthGuard)
 @Controller('profile')
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
@@ -22,9 +21,8 @@ export class ProfileController {
     return this.profileService.findOne(id);
   }
 
-  @UseGuards(AuthGuard)
   @UseGuards(RolesGuard)
-  @Roles(Role.SUPER_ADMIN, Role.PATIENT, Role.DOCTOR)
+  @Roles( Role.PATIENT, Role.DOCTOR, Role.SUPER_ADMIN)
   @Get('get-profile/me/:id')
   me(@Param('id') id: string) {
     return this.profileService.me(id);
