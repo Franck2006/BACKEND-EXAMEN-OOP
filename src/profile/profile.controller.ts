@@ -16,6 +16,11 @@ export class ProfileController {
     return this.profileService.findOne(id);
   }
 
+  @Get('get-profile/me/:id')
+  me(@Param('id') id: string) {
+    return this.profileService.me(id);
+  }
+
   @Patch('update-profile/:id')
   update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
     return this.profileService.update(id, updateProfileDto);

@@ -28,6 +28,12 @@ export class ProfileService {
     })
   }
 
+  async me(id: string) {
+    return await this.prisma.profile.findUnique({
+      where:{id}
+    })
+  }
+
   async update(id: string, updateProfileDto: UpdateProfileDto) {
     return await this.prisma.profile.update({
       where: {  id },
