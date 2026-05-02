@@ -30,7 +30,13 @@ export class ProfileService {
 
   async me(id: string) {
     return await this.prisma.profile.findUnique({
-      where:{id}
+      where:{
+        id
+      },
+      include:{
+        doctor: true,
+        patient: true
+      }
     })
   }
 

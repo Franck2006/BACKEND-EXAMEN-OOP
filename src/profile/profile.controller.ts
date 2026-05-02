@@ -1,6 +1,12 @@
-import { Controller, Get, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { Roles } from 'src/auth/roles.decorator';
+import { Role } from 'generated/prisma/enums';
+import { RolesGuard } from 'src/auth/roles.guard';
+
+
 
 @Controller('profile')
 export class ProfileController {
@@ -16,6 +22,9 @@ export class ProfileController {
     return this.profileService.findOne(id);
   }
 
+  @UseGuards(AuthGuard)
+  @UseGuards(RolesGuard)
+  @Roles(Role.SUPER_ADMIN, Role.PATIENT, Role.DOCTOR)
   @Get('get-profile/me/:id')
   me(@Param('id') id: string) {
     return this.profileService.me(id);

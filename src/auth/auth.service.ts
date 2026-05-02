@@ -45,7 +45,7 @@ export class AuthService {
       email: signInDto.email,
       password: signInDto.password
     })
-
+    
     if (error) throw new Error("something went wrong !!!!")
 
     return data.session
