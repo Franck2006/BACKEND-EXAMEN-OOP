@@ -1,4 +1,13 @@
-import { Controller, Get, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Query,
+} from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -11,7 +20,9 @@ import { RolesGuard } from 'src/auth/roles.guard';
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
-  @Get("get-all-profiles")
+  @UseGuards(RolesGuard)
+  @Roles(Role.SUPER_ADMIN)
+  @Get('get-all-profiles')
   findAll() {
     return this.profileService.findAll();
   }
@@ -22,7 +33,7 @@ export class ProfileController {
   }
 
   @UseGuards(RolesGuard)
-  @Roles( Role.PATIENT, Role.DOCTOR, Role.SUPER_ADMIN)
+  @Roles(Role.PATIENT, Role.DOCTOR, Role.SUPER_ADMIN)
   @Get('get-profile/me/:id')
   me(@Param('id') id: string) {
     return this.profileService.me(id);
@@ -36,5 +47,10 @@ export class ProfileController {
   @Delete('delete-profile/:id')
   remove(@Param('id') id: string) {
     return this.profileService.remove(id);
+  }
+
+  @Get('get-all-patients-or-doctors')
+  getAllPatientsOrDoctors(@Query('role') role: 'DOCTOR' | 'PATIENT' | 'USER') {
+    return this.profileService.getAllPatientsOrDoctors(role);
   }
 }

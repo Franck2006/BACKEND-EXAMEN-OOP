@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Role } from 'generated/prisma/enums';
 
 @Injectable()
 export class ProfileService {
@@ -8,48 +9,70 @@ export class ProfileService {
 
   async findAll() {
     return await this.prisma.profile.findMany({
-      include:{
+      include: {
         user: true,
         doctor: true,
-        patient: true
-      }
-    })
+        patient: true,
+      },
+    });
   }
 
   async findOne(id: string) {
-    console.log("id: ", id);
+    console.log('id: ', id);
     return await this.prisma.profile.findUnique({
       where: { user_id: id },
       include: {
         user: true,
         doctor: true,
-        patient: true
-      }
-    })
+        patient: true,
+      },
+    });
   }
 
   async me(id: string) {
     return await this.prisma.profile.findUnique({
-      where:{
-        id
+      where: {
+        id,
       },
-      include:{
+      include: {
         doctor: true,
-        patient: true
-      }
-    })
+        patient: true,
+      },
+    });
   }
 
   async update(id: string, updateProfileDto: UpdateProfileDto) {
     return await this.prisma.profile.update({
-      where: {  id },
-      data: updateProfileDto
-    })
+      where: { id },
+      data: updateProfileDto,
+    });
   }
 
   async remove(id: string) {
     return await this.prisma.profile.delete({
-      where: { id }
-    })
+      where: { id },
+    });
+  }
+
+  getAllPatientsOrDoctors(role?: 'DOCTOR' | 'PATIENT' | 'USER') {
+    if (role === 'DOCTOR') {
+      return this.prisma.profile.findMany({
+        where: {
+          role: 'DOCTOR',
+        },
+        include: {
+          doctor: true,
+        },
+      });
+    } else if (role === 'PATIENT') {
+      return this.prisma.profile.findMany({
+        where: {
+          role: 'PATIENT',
+        },
+        include: {
+          patient: true,
+        },
+      });
+    } else return this.prisma.profile.findMany();
   }
 }
