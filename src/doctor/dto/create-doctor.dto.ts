@@ -1,6 +1,6 @@
 export class CreateDoctorDto {
   specialty: string;
   profile_id: string;
-  licenceNumber: number;
+  licenceNumber: string;
   description: string;
 }

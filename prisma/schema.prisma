@@ -622,7 +622,7 @@ model Doctor {
   profile       Profile       @relation(fields: [profileId], references: [id], onDelete: Cascade)
   specialty     String
   description String
-  licenceNumber Int
+  licenceNumber String
   profileId     String        @unique @db.Uuid
   schedules     Schedule[]
   appointments  Appointment[]

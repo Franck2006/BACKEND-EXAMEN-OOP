@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SupabaseService } from 'src/supabase/supabase.service';
 
@@ -6,33 +11,29 @@ import { SupabaseService } from 'src/supabase/supabase.service';
 export class AuthGuard implements CanActivate {
   constructor(
     private supabase: SupabaseService,
-    private prisma: PrismaService
-  ){}
+    private prisma: PrismaService,
+  ) {}
 
-  async canActivate(
-    context: ExecutionContext,
-  ): Promise<boolean>{
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const authHeader = request.headers['authorization'];
 
-    if(!authHeader ) return false;
+    if (!authHeader) return false;
 
     const token = authHeader.split(' ')[1];
 
     const { data, error } = await this.supabase.client.auth.getUser(token);
 
-    if(error) throw new UnauthorizedException(error.message);
+    if (error) throw new UnauthorizedException(error.message);
 
     const profile = await this.prisma.profile.findUnique({
-      where:{
-        user_id: data.user.id
-      }
-    })
+      where: {
+        user_id: data.user.id,
+      },
+    });
 
     request.user = profile;
 
-    console.log("profile: ", request.user);
-    
     return true;
   }
 }

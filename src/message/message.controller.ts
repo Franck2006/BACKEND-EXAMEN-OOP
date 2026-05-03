@@ -1,18 +1,29 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { MessageService } from './message.service';
-import { CreateMessageDto } from './dto/create-message.dto';
+import {
+  CreateMessageDto,
+  Doctor_patient_message,
+} from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 
 @Controller('message')
 export class MessageController {
   constructor(private readonly messageService: MessageService) {}
 
-  @Post("create-message")
+  @Post('send-message')
   create(@Body() createMessageDto: CreateMessageDto) {
     return this.messageService.create(createMessageDto);
   }
 
-  @Get("get-all-messages")
+  @Get('get-all-messages')
   findAll() {
     return this.messageService.findAll();
   }
@@ -20,6 +31,20 @@ export class MessageController {
   @Get('get-message/:id')
   findOne(@Param('id') id: string) {
     return this.messageService.findOne(id);
+  }
+
+  @Get('get-for-doctor/:id')
+  getOneMessageForDoctor(id: string) {
+    return this.messageService.getOneMessageForDoctor(id);
+  }
+
+  @Get('get-for-doctor/:id')
+  getOneMessageForDoctorPatient(
+    @Body() doctor_patient_message: Doctor_patient_message,
+  ) {
+    return this.messageService.getOneMessageForDoctorPatient(
+      doctor_patient_message,
+    );
   }
 
   @Patch('update-message/:id')
