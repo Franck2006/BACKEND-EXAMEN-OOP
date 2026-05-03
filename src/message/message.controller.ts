@@ -34,11 +34,11 @@ export class MessageController {
   }
 
   @Get('get-for-doctor/:id')
-  getOneMessageForDoctor(id: string) {
+  getOneMessageForDoctor(@Param('id') id: string) {
     return this.messageService.getOneMessageForDoctor(id);
   }
 
-  @Get('get-for-doctor/:id')
+  @Get('get-doctor-patient-message')
   getOneMessageForDoctorPatient(
     @Body() doctor_patient_message: Doctor_patient_message,
   ) {
