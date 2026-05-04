@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { AppointementService } from './appointement.service';
 import { CreateAppointementDto } from './dto/create-appointement.dto';
 import { UpdateAppointementDto } from './dto/update-appointement.dto';
@@ -7,27 +15,34 @@ import { UpdateAppointementDto } from './dto/update-appointement.dto';
 export class AppointementController {
   constructor(private readonly appointementService: AppointementService) {}
 
-  @Post("create-appointement")
+  @Post('create-appointement')
   create(@Body() createAppointementDto: CreateAppointementDto) {
     return this.appointementService.create(createAppointementDto);
   }
 
-  @Get("get-all-appointements")
+  @Get('get-all-appointements')
   findAll() {
     return this.appointementService.findAll();
   }
 
-  @Get("get-appointement/:id")
+  @Get('get-all-doctor-appointements/:id')
+  getAllDoctorAppointment(@Param('id') id: string) {
+    return this.appointementService.getAllDoctorAppointment(id);
+  }
+
+  @Get('get-appointement/:id')
   findOne(@Param('id') id: string) {
     return this.appointementService.findOne(id);
   }
 
-  @Patch("update-appointement/:id")
-  update(@Param('id') id: string, @Body() updateAppointementDto: UpdateAppointementDto) {
+  @Patch('update-appointement/:id')
+  update(
+    @Param('id') id: string,
+    @Body() updateAppointementDto: UpdateAppointementDto,
+  ) {
     return this.appointementService.update(id, updateAppointementDto);
   }
-
-  @Delete("delete-appointement/:id")
+  @Delete('delete-appointement/:id')
   remove(@Param('id') id: string) {
     return this.appointementService.remove(id);
   }

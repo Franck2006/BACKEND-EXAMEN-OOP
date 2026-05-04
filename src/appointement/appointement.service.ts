@@ -5,61 +5,83 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class AppointementService {
-  constructor(private prisma: PrismaService){}
+  constructor(private prisma: PrismaService) {}
   async create(createAppointementDto: CreateAppointementDto) {
     return this.prisma.appointment.create({
-      data:{
-        patient:{
-          connect:{
-            id: createAppointementDto.patient_id
-          }
+      data: {
+        patient: {
+          connect: {
+            id: createAppointementDto.patient_id,
+          },
         },
-        doctor:{
-          connect:{
-            id: createAppointementDto.doctor_id
-          }
+        doctor: {
+          connect: {
+            id: createAppointementDto.doctor_id,
+          },
         },
-        schedule:{
-          connect:{
-            id: createAppointementDto.schedule_id
-          }
-        }
-      }
-    })
+        schedule: {
+          connect: {
+            id: createAppointementDto.schedule_id,
+          },
+        },
+      },
+    });
   }
 
   async findAll() {
     return await this.prisma.appointment.findMany({
-      include:{
+      include: {
         patient: true,
         schedule: true,
-        doctor: true
-      }
-    })
+        doctor: true,
+      },
+    });
+  }
+
+  async getAllDoctorAppointment(doctorId: string) {
+    console.log(doctorId);
+    return await this.prisma.appointment.findMany({
+      where: {
+        doctorId: doctorId,
+      },
+      include: {
+        patient: {
+          include: {
+            profile: true,
+          },
+        },
+        doctor: {
+          include: {
+            profile: true,
+          },
+        },
+        schedule: true,
+      },
+    });
   }
 
   async findOne(id: string) {
-    return  await this.prisma.appointment.findUnique({
-      where:{
-        id
-      }
-    })
+    return await this.prisma.appointment.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
   async update(id: string, updateAppointementDto: UpdateAppointementDto) {
     return await this.prisma.appointment.update({
-      where:{
-        id
+      where: {
+        id,
       },
-      data: {}
-    })
+      data: {},
+    });
   }
 
   async remove(id: string) {
-    return  await this.prisma.appointment.delete({
-      where:{
-        id
-      }
-    })
+    return await this.prisma.appointment.delete({
+      where: {
+        id,
+      },
+    });
   }
 }
