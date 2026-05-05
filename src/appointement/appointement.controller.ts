@@ -30,6 +30,11 @@ export class AppointementController {
     return this.appointementService.getAllDoctorAppointment(id);
   }
 
+  @Get('get-all-patient-appointements/:id')
+  getAllPatientAppointment(@Param('id') id: string) {
+    return this.appointementService.getAllPatientAppointment(id);
+  }
+
   @Get('get-appointement/:id')
   findOne(@Param('id') id: string) {
     return this.appointementService.findOne(id);

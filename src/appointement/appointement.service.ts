@@ -60,6 +60,27 @@ export class AppointementService {
     });
   }
 
+  async getAllPatientAppointment(patientId: string) {
+    return await this.prisma.appointment.findMany({
+      where: {
+        patientId: patientId,
+      },
+      include: {
+        patient: {
+          include: {
+            profile: true,
+          },
+        },
+        doctor: {
+          include: {
+            profile: true,
+          },
+        },
+        schedule: true,
+      },
+    });
+  }
+
   async findOne(id: string) {
     return await this.prisma.appointment.findUnique({
       where: {
