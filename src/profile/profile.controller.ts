@@ -39,6 +39,11 @@ export class ProfileController {
     return this.profileService.me(id);
   }
 
+  @Get('get-users-based-on-role')
+  getUsersBasedOnRole() {
+    return this.profileService.getUsersBasedOnRole();
+  }
+
   @Patch('update-profile/:id')
   update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
     return this.profileService.update(id, updateProfileDto);

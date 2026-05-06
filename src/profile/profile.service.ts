@@ -41,6 +41,15 @@ export class ProfileService {
     });
   }
 
+  async getUsersBasedOnRole() {
+    return await this.prisma.profile.groupBy({
+      by: ['role'],
+      _count: {
+        role: true,
+      },
+    });
+  }
+
   async update(id: string, updateProfileDto: UpdateProfileDto) {
     return await this.prisma.profile.update({
       where: { id },
